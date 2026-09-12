@@ -6,6 +6,7 @@ import '../theme.dart';
 import '../widgets/alphabet_index.dart';
 import '../widgets/app_list.dart';
 import '../widgets/clock_widget.dart';
+import '../../update_service.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -128,43 +129,91 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     _fetcher.openApp(app.packageName);
   }
 
+  void _showLauncherSettings() {
+    showModalBottomSheet<void>(
+      context: context,
+      backgroundColor: AppColors.background,
+      builder: (_) => SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(12, 12, 12, 20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                child: Text(
+                  'Launcher Settings',
+                  style: TextStyle(
+                    fontFamily: AppTypography.display,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.textPrimary,
+                  ),
+                ),
+              ),
+              ListTile(
+                leading: const Icon(
+                  Icons.system_update,
+                  color: AppColors.accent,
+                ),
+                title: const Text(
+                  'Check for Updates',
+                  style: TextStyle(color: AppColors.textPrimary),
+                ),
+                onTap: () {
+                  Navigator.pop(context);
+                  UpdateService().checkAndDownloadUpdate(context);
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
       child: Scaffold(
-        body: Stack(
-          fit: StackFit.expand,
-          children: [
-            const _Background(),
-            SafeArea(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Padding(
-                    padding: EdgeInsets.fromLTRB(24, 28, 24, 0),
-                    child: ClockWidget(),
-                  ),
-                  const SizedBox(height: 20),
-                  const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 28),
-                    child: Text(
-                      'Choose Your Productivity Features',
-                      style: TextStyle(
-                        fontFamily: AppTypography.body,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 12,
-                        letterSpacing: 1.4,
-                        color: AppColors.textMuted,
+        body: GestureDetector(
+          behavior: HitTestBehavior.translucent,
+          onLongPress: _showLauncherSettings,
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              const _Background(),
+              SafeArea(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.fromLTRB(24, 28, 24, 0),
+                      child: ClockWidget(),
+                    ),
+                    const SizedBox(height: 20),
+                    const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 28),
+                      child: Text(
+                        'Choose Your Productivity Features',
+                        style: TextStyle(
+                          fontFamily: AppTypography.body,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 12,
+                          letterSpacing: 1.4,
+                          color: AppColors.textMuted,
+                        ),
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 10),
-                  Expanded(child: _buildBody()),
-                ],
+                    const SizedBox(height: 10),
+                    Expanded(child: _buildBody()),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
