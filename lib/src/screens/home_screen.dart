@@ -98,8 +98,10 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
 
   void _onScroll() {
     if (_apps.isEmpty || !_scrollController.hasClients) return;
-    final firstVisible =
-        (_scrollController.offset / _itemExtent).floor().clamp(0, _apps.length - 1);
+    final firstVisible = (_scrollController.offset / _itemExtent).floor().clamp(
+      0,
+      _apps.length - 1,
+    );
     final letter = _letterOf(_apps[firstVisible].name);
     if (letter != _activeLetter) {
       setState(() => _activeLetter = letter);
@@ -128,39 +130,42 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
-        fit: StackFit.expand,
-        children: [
-          const _Background(),
-          SafeArea(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Padding(
-                  padding: EdgeInsets.fromLTRB(24, 28, 24, 0),
-                  child: ClockWidget(),
-                ),
-                const SizedBox(height: 20),
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 28),
-                  child: Text(
-                    'Choose Your Productivity Features',
-                    style: TextStyle(
-                      fontFamily: AppTypography.body,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 12,
-                      letterSpacing: 1.4,
-                      color: AppColors.textMuted,
+    return PopScope(
+      canPop: false,
+      child: Scaffold(
+        body: Stack(
+          fit: StackFit.expand,
+          children: [
+            const _Background(),
+            SafeArea(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.fromLTRB(24, 28, 24, 0),
+                    child: ClockWidget(),
+                  ),
+                  const SizedBox(height: 20),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 28),
+                    child: Text(
+                      'Choose Your Productivity Features',
+                      style: TextStyle(
+                        fontFamily: AppTypography.body,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 12,
+                        letterSpacing: 1.4,
+                        color: AppColors.textMuted,
+                      ),
                     ),
                   ),
-                ),
-                const SizedBox(height: 10),
-                Expanded(child: _buildBody()),
-              ],
+                  const SizedBox(height: 10),
+                  Expanded(child: _buildBody()),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -203,10 +208,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
             itemCount: _apps.length,
             itemBuilder: (context, index) {
               final app = _apps[index];
-              return AppListItem(
-                app: app,
-                onTap: () => _launchApp(app),
-              );
+              return AppListItem(app: app, onTap: () => _launchApp(app));
             },
           ),
         ),
