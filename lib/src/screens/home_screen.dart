@@ -173,11 +173,33 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     );
   }
 
+  void _showCustomizeSheet() {
+    showModalBottomSheet<void>(
+      context: context,
+      backgroundColor: AppColors.surface,
+      builder: (_) => const SafeArea(
+        child: Padding(
+          padding: EdgeInsets.fromLTRB(28, 20, 28, 32),
+          child: Text(
+            'Customize HKVerse',
+            style: TextStyle(
+              fontFamily: AppTypography.display,
+              fontSize: 20,
+              fontWeight: FontWeight.w600,
+              color: AppColors.textPrimary,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
       child: Scaffold(
+        backgroundColor: Colors.transparent,
         body: GestureDetector(
           behavior: HitTestBehavior.translucent,
           onLongPress: _showLauncherSettings,
@@ -210,6 +232,20 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                     const SizedBox(height: 10),
                     Expanded(child: _buildBody()),
                   ],
+                ),
+              ),
+              SafeArea(
+                child: Align(
+                  alignment: Alignment.topRight,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 16, right: 16),
+                    child: IconButton(
+                      tooltip: 'Customize HKVerse',
+                      onPressed: _showCustomizeSheet,
+                      icon: const Icon(Icons.tune_rounded),
+                      color: AppColors.textPrimary,
+                    ),
+                  ),
                 ),
               ),
             ],
@@ -276,8 +312,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   }
 }
 
-/// Dark artistic gradient echoing the HKVerse brand: a soft warm aura over a
-/// deep near-black canvas, with a faint monogram watermark.
+/// A light glass overlay that retains the system wallpaper behind the launcher.
 class _Background extends StatelessWidget {
   const _Background();
 
@@ -292,9 +327,9 @@ class _Background extends StatelessWidget {
               center: Alignment(-0.7, -0.8),
               radius: 1.5,
               colors: [
-                Color(0xFF1B0E22),
-                AppColors.background,
-                AppColors.background,
+                Color(0x381B0E22),
+                Color(0x26030213),
+                Color(0x26030213),
               ],
               stops: [0.0, 0.5, 1.0],
             ),

@@ -31,7 +31,7 @@ abstract final class AppTypography {
 ThemeData buildAppTheme() {
   final base = ThemeData.dark(useMaterial3: true);
   return base.copyWith(
-    scaffoldBackgroundColor: AppColors.background,
+    scaffoldBackgroundColor: Colors.transparent,
     colorScheme: const ColorScheme.dark(
       primary: AppColors.accent,
       onPrimary: Colors.white,
@@ -47,6 +47,6 @@ ThemeData buildAppTheme() {
     ),
     splashColor: AppColors.accent.withValues(alpha: 0.18),
     highlightColor: AppColors.accent.withValues(alpha: 0.06),
-    canvasColor: AppColors.background,
+    canvasColor: Colors.transparent,
   );
 }

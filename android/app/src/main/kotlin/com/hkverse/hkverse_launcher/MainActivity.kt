@@ -7,6 +7,7 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.drawable.Drawable
 import io.flutter.embedding.android.FlutterActivity
+import io.flutter.embedding.android.FlutterActivityLaunchConfigs.BackgroundMode
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 import java.io.ByteArrayOutputStream
@@ -17,6 +18,8 @@ private const val CHANNEL = "hkverse.launcher/apps"
 private const val ICON_SIZE = 108
 
 class MainActivity : FlutterActivity() {
+
+    override fun getBackgroundMode(): BackgroundMode = BackgroundMode.transparent
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
