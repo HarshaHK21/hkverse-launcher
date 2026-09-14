@@ -31,6 +31,11 @@ class MainActivity : FlutterActivity() {
                         val packageName = call.argument<String>("packageName")
                         result.success(packageName?.let { openApp(it) } ?: false)
                     }
+                    "openWallpaperPicker" -> {
+                        val intent = Intent(Intent.ACTION_SET_WALLPAPER)
+                        startActivity(Intent.createChooser(intent, "Select Wallpaper"))
+                        result.success(true)
+                    }
                     else -> result.notImplemented()
                 }
             }
