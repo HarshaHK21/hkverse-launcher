@@ -132,50 +132,6 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     _fetcher.openApp(app.packageName);
   }
 
-  void _showLauncherSettings() {
-    showModalBottomSheet<void>(
-      context: context,
-      backgroundColor: AppColors.background,
-      builder: (_) => SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(12, 12, 12, 20),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                child: Text(
-                  'Launcher Settings',
-                  style: TextStyle(
-                    fontFamily: AppTypography.display,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.textPrimary,
-                  ),
-                ),
-              ),
-              ListTile(
-                leading: const Icon(
-                  Icons.system_update,
-                  color: AppColors.accent,
-                ),
-                title: const Text(
-                  'Check for Updates',
-                  style: TextStyle(color: AppColors.textPrimary),
-                ),
-                onTap: () {
-                  Navigator.pop(context);
-                  UpdateService().checkAndDownloadUpdate(context);
-                },
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
   void _showCustomizationPanel(BuildContext context) {
     showModalBottomSheet<void>(
       context: context,
@@ -184,18 +140,14 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       builder: (_) => FractionallySizedBox(
         heightFactor: 0.56,
         child: ClipRRect(
-          borderRadius: const BorderRadius.vertical(
-            top: Radius.circular(28),
-          ),
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
           child: BackdropFilter(
             filter: ImageFilter.blur(sigmaX: 15.0, sigmaY: 15.0),
             child: Container(
               decoration: BoxDecoration(
                 color: Colors.black.withValues(alpha: 0.75),
                 border: Border(
-                  top: BorderSide(
-                    color: Colors.white.withValues(alpha: 0.1),
-                  ),
+                  top: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
                 ),
               ),
               child: SafeArea(
@@ -230,7 +182,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                         builder: (context, snapshot) {
                           final version = snapshot.hasData
                               ? 'HKVerse v${snapshot.data!.version} '
-                                  '(build ${snapshot.data!.buildNumber})'
+                                    '(build ${snapshot.data!.buildNumber})'
                               : 'HKVerse';
                           return Text(
                             version,
@@ -245,7 +197,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                       const SizedBox(height: 18),
                       const Divider(color: AppColors.border, height: 1),
                       const SizedBox(height: 8),
-                      const ListTile(
+                      ListTile(
                         contentPadding: EdgeInsets.zero,
                         leading: Icon(
                           Icons.wallpaper_rounded,
@@ -255,8 +207,12 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                           'Change Wallpaper',
                           style: TextStyle(color: AppColors.textPrimary),
                         ),
+                        onTap: () {
+                          Navigator.pop(context);
+                          _fetcher.openWallpaperPicker();
+                        },
                       ),
-                      const ListTile(
+                      ListTile(
                         contentPadding: EdgeInsets.zero,
                         leading: Icon(
                           Icons.system_update_rounded,
@@ -266,6 +222,10 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                           'Check for Updates',
                           style: TextStyle(color: AppColors.textPrimary),
                         ),
+                        onTap: () {
+                          Navigator.pop(context);
+                          UpdateService().checkAndDownloadUpdate(context);
+                        },
                       ),
                       const ListTile(
                         contentPadding: EdgeInsets.zero,
@@ -294,57 +254,53 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     return PopScope(
       canPop: false,
       child: Scaffold(
-        backgroundColor: Colors.transparent,
-        body: GestureDetector(
-          behavior: HitTestBehavior.translucent,
-          onLongPress: _showLauncherSettings,
-          child: Stack(
-            fit: StackFit.expand,
-            children: [
-              const _Background(),
-              SafeArea(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Padding(
-                      padding: EdgeInsets.fromLTRB(24, 28, 24, 0),
-                      child: ClockWidget(),
-                    ),
-                    const SizedBox(height: 20),
-                    const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 28),
-                      child: Text(
-                        'Choose Your Productivity Features',
-                        style: TextStyle(
-                          fontFamily: AppTypography.body,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 12,
-                          letterSpacing: 1.4,
-                          color: AppColors.textMuted,
-                        ),
+        backgroundColor: AppColors.background,
+        body: Stack(
+          fit: StackFit.expand,
+          children: [
+            const _Background(),
+            SafeArea(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.fromLTRB(24, 28, 24, 0),
+                    child: ClockWidget(),
+                  ),
+                  const SizedBox(height: 20),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 28),
+                    child: Text(
+                      'Choose Your Productivity Features',
+                      style: TextStyle(
+                        fontFamily: AppTypography.body,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 12,
+                        letterSpacing: 1.4,
+                        color: AppColors.textMuted,
                       ),
                     ),
-                    const SizedBox(height: 10),
-                    Expanded(child: _buildBody()),
-                  ],
-                ),
+                  ),
+                  const SizedBox(height: 10),
+                  Expanded(child: _buildBody()),
+                ],
               ),
-              SafeArea(
-                child: Align(
-                  alignment: Alignment.topRight,
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 16, right: 16),
-                    child: IconButton(
-                      tooltip: 'Customize HKVerse',
-                      onPressed: () => _showCustomizationPanel(context),
-                      icon: const Icon(Icons.tune_rounded),
-                      color: AppColors.textPrimary,
-                    ),
+            ),
+            SafeArea(
+              child: Align(
+                alignment: Alignment.topRight,
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 16, right: 16),
+                  child: IconButton(
+                    tooltip: 'Customize HKVerse',
+                    onPressed: () => _showCustomizationPanel(context),
+                    icon: const Icon(Icons.tune_rounded),
+                    color: AppColors.textPrimary,
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -421,11 +377,7 @@ class _Background extends StatelessWidget {
             gradient: RadialGradient(
               center: Alignment(-0.7, -0.8),
               radius: 1.5,
-              colors: [
-                Color(0x381B0E22),
-                Color(0x26030213),
-                Color(0x26030213),
-              ],
+              colors: [Color(0x381B0E22), Color(0x26030213), Color(0x26030213)],
               stops: [0.0, 0.5, 1.0],
             ),
           ),
