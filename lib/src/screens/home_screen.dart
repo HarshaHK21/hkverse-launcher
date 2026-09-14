@@ -1,4 +1,7 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 import '../models/app_info.dart';
 import '../services/app_fetcher.dart';
@@ -173,20 +176,112 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     );
   }
 
-  void _showCustomizeSheet() {
+  void _showCustomizationPanel(BuildContext context) {
     showModalBottomSheet<void>(
       context: context,
-      backgroundColor: AppColors.surface,
-      builder: (_) => const SafeArea(
-        child: Padding(
-          padding: EdgeInsets.fromLTRB(28, 20, 28, 32),
-          child: Text(
-            'Customize HKVerse',
-            style: TextStyle(
-              fontFamily: AppTypography.display,
-              fontSize: 20,
-              fontWeight: FontWeight.w600,
-              color: AppColors.textPrimary,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (_) => FractionallySizedBox(
+        heightFactor: 0.56,
+        child: ClipRRect(
+          borderRadius: const BorderRadius.vertical(
+            top: Radius.circular(28),
+          ),
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 15.0, sigmaY: 15.0),
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.black.withValues(alpha: 0.75),
+                border: Border(
+                  top: BorderSide(
+                    color: Colors.white.withValues(alpha: 0.1),
+                  ),
+                ),
+              ),
+              child: SafeArea(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 12, 20, 16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Center(
+                        child: Container(
+                          width: 36,
+                          height: 4,
+                          decoration: BoxDecoration(
+                            color: Colors.white.withValues(alpha: 0.28),
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      const Text(
+                        'Customize HKVerse',
+                        style: TextStyle(
+                          fontFamily: AppTypography.display,
+                          fontSize: 22,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.textPrimary,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      FutureBuilder<PackageInfo>(
+                        future: PackageInfo.fromPlatform(),
+                        builder: (context, snapshot) {
+                          final version = snapshot.hasData
+                              ? 'HKVerse v${snapshot.data!.version} '
+                                  '(build ${snapshot.data!.buildNumber})'
+                              : 'HKVerse';
+                          return Text(
+                            version,
+                            style: const TextStyle(
+                              fontFamily: AppTypography.body,
+                              fontSize: 12,
+                              color: AppColors.textMuted,
+                            ),
+                          );
+                        },
+                      ),
+                      const SizedBox(height: 18),
+                      const Divider(color: AppColors.border, height: 1),
+                      const SizedBox(height: 8),
+                      const ListTile(
+                        contentPadding: EdgeInsets.zero,
+                        leading: Icon(
+                          Icons.wallpaper_rounded,
+                          color: AppColors.accent,
+                        ),
+                        title: Text(
+                          'Change Wallpaper',
+                          style: TextStyle(color: AppColors.textPrimary),
+                        ),
+                      ),
+                      const ListTile(
+                        contentPadding: EdgeInsets.zero,
+                        leading: Icon(
+                          Icons.system_update_rounded,
+                          color: AppColors.accent,
+                        ),
+                        title: Text(
+                          'Check for Updates',
+                          style: TextStyle(color: AppColors.textPrimary),
+                        ),
+                      ),
+                      const ListTile(
+                        contentPadding: EdgeInsets.zero,
+                        leading: Icon(
+                          Icons.feedback_outlined,
+                          color: AppColors.accent,
+                        ),
+                        title: Text(
+                          'Send Feedback',
+                          style: TextStyle(color: AppColors.textPrimary),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ),
           ),
         ),
@@ -241,7 +336,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                     padding: const EdgeInsets.only(top: 16, right: 16),
                     child: IconButton(
                       tooltip: 'Customize HKVerse',
-                      onPressed: _showCustomizeSheet,
+                      onPressed: () => _showCustomizationPanel(context),
                       icon: const Icon(Icons.tune_rounded),
                       color: AppColors.textPrimary,
                     ),
